@@ -9,6 +9,11 @@ repository.workspace = true
 name = "codex-plus-plus"
 path = "src/main.rs"
 
+# Keep the pre-1.2.43 launcher name available for older manager builds and shortcuts.
+[[bin]]
+name = "codex-plus"
+path = "src/main.rs"
+
 [dependencies]
 anyhow.workspace = true
 async-trait = "0.1"

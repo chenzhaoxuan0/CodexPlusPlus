@@ -406,27 +406,46 @@ pub fn renderer_verification_script() -> &'static str {
       visible: rect.width > 0 && rect.height > 0 && style.display !== "none" && style.visibility !== "hidden",
     };
   };
+  const root = document.documentElement;
   const homeSignal = document.querySelector('[data-testid="home-icon"]') ||
     document.querySelector('[data-feature="game-source"]') ||
     document.querySelector('.group\\/home-suggestions');
   const homeRoute = homeSignal?.closest('[role="main"]') || null;
-  const home = document.querySelector('[role="main"].dream-home, [role="main"].dream-skin-home, [role="main"].glass-vision-home');
+  const home = document.querySelector('[role="main"]:has([data-testid="home-icon"])') ||
+    homeRoute ||
+    document.querySelector('[role="main"].dream-home, [role="main"].dream-skin-home, [role="main"].glass-vision-home');
   const suggestions = home?.querySelector('.group\\/home-suggestions') || null;
-  const cards = suggestions ? [...suggestions.querySelectorAll('button')].map(box) : [];
+  const cardButtons = suggestions ? [...suggestions.querySelectorAll('button')] : [];
+  const cards = cardButtons.map(box);
   const chrome = document.getElementById('codex-dream-skin-chrome') ||
     document.getElementById('codex-glass-vision-skin-chrome');
+  const runtime = window.__CODEX_DREAM_SKIN_STATE__ || window.__CODEX_GLASS_VISION_SKIN_STATE__;
+  const modernInstalled = root?.getAttribute('data-dream-skin') === 'active';
+  const adopted = runtime?.styleMode === 'adopted' && runtime.styleSheet &&
+    [...document.adoptedStyleSheets].includes(runtime.styleSheet);
+  const fallbackStyle = runtime?.styleMode === 'style' &&
+    document.getElementById('codex-dream-skin-style') === runtime.styleNode;
+  const homeChildren = home?.children ? [...home.children] : [];
+  const bannerHolder = homeChildren.find((node) => node.querySelector?.('.home-banners'));
+  const siblingCandidates = homeChildren.filter((node) => node !== bannerHolder).map(box);
+  const heroChain = [];
+  for (let node = home?.firstElementChild || null; node && heroChain.length < 3;
+    node = node.firstElementChild) heroChain.push(node);
+  const heroCandidates = heroChain.map(box);
+  const hero = siblingCandidates.find((item) => item?.visible && item.width >= 280 && item.height >= 120) ||
+    [...heroCandidates].reverse().find((item) => item?.visible) ||
+    siblingCandidates.find((item) => item?.visible) || null;
   return JSON.stringify({
-    installed: document.documentElement.classList.contains('codex-dream-skin') ||
-      document.documentElement.classList.contains('codex-glass-vision-skin'),
-    version: window.__CODEX_DREAM_SKIN_STATE__?.version ||
-      window.__CODEX_GLASS_VISION_SKIN_STATE__?.version || null,
-    stylePresent: Boolean(document.getElementById('codex-dream-skin-style') ||
+    installed: modernInstalled || root?.classList.contains('codex-dream-skin') ||
+      root?.classList.contains('codex-glass-vision-skin'),
+    version: runtime?.version || null,
+    stylePresent: Boolean(adopted || fallbackStyle || document.getElementById('codex-dream-skin-style') ||
       document.getElementById('codex-glass-vision-skin-style')),
-    chromePresent: Boolean(chrome),
-    chromePointerEvents: getComputedStyle(chrome || document.body).pointerEvents,
+    chromePresent: Boolean(chrome || modernInstalled),
+    chromePointerEvents: chrome ? getComputedStyle(chrome).pointerEvents : (modernInstalled ? "none" : null),
     homeRoute: Boolean(homeRoute),
     homePresent: Boolean(home),
-    hero: box(home?.firstElementChild?.firstElementChild?.firstElementChild),
+    hero,
     visibleCardCount: cards.filter((item) => item?.visible).length,
     projectButton: box(home?.querySelector('.group\\/project-selector > button')),
     composer: box(document.querySelector('.composer-surface-chrome')),

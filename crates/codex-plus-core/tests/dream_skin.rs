@@ -15,7 +15,7 @@ fn backend_settings_defaults_to_upstream_platform_theme_config() {
         assert_eq!(theme.id, "preset-arina-hashimoto");
         assert_eq!(theme.name, "桥本有菜");
         assert_eq!(theme.tagline, "把柔光与玫瑰带进今天的工作台。");
-        assert!(theme.colors.is_none());
+        assert_eq!(theme.colors.as_ref().unwrap().accent, "#E25563");
         assert_eq!(theme.extra_fields["appearance"], "auto");
         assert_eq!(theme.extra_fields["art"]["safeArea"], "left");
     } else {

@@ -10,19 +10,7 @@ fn assert_sha256(relative_path: &str, expected: &str) {
             path.display()
         )
     });
-    // Git may materialize these text assets with CRLF on Windows. Hash the
-    // repository's canonical LF representation so the guard is platform
-    // independent while still detecting substantive asset changes.
-    let mut normalized = Vec::with_capacity(bytes.len());
-    let mut index = 0;
-    while index < bytes.len() {
-        if bytes[index] == b'\r' && bytes.get(index + 1) == Some(&b'\n') {
-            index += 1;
-        }
-        normalized.push(bytes[index]);
-        index += 1;
-    }
-    let actual = format!("{:X}", Sha256::digest(normalized));
+    let actual = format!("{:X}", Sha256::digest(bytes));
     assert_eq!(actual, expected, "upstream asset changed: {relative_path}");
 }
 
@@ -31,43 +19,51 @@ fn bundled_target_renderers_and_styles_remain_byte_exact() {
     for (path, hash) in [
         (
             "assets/inject/upstream/dream-skin/windows/renderer-inject.js",
-            "559AE19943E3CC6C22EDAF4A316ECD6AC0DC49C492038AB16F0FAB4069EA49E6",
+            "DB48AE78497EB9C1EB800F32C110778490A3913EDD969429697DC3EBD292DE97",
         ),
         (
             "assets/inject/upstream/dream-skin/windows/dream-skin.css",
-            "049695F3F8FD66826F7DD0EF9363D21A5AA491C627DD9602CEAEA7383CFDD49C",
+            "AFF9433B526D7149DA99B7C07367B75BCA558F9D8114243331FB9099B54E2916",
+        ),
+        (
+            "assets/inject/upstream/dream-skin/windows/theme.json",
+            "9068F781F190D213FE5BE180A12AB1ED534FAFDD0BFBA00276C951A178DFE72A",
         ),
         (
             "assets/inject/upstream/dream-skin/macos/renderer-inject.js",
-            "73DA118C964E768676C44C9ABAC910114547DDA44B6190CC3D8A6220059ABB0B",
+            "DB48AE78497EB9C1EB800F32C110778490A3913EDD969429697DC3EBD292DE97",
         ),
         (
             "assets/inject/upstream/dream-skin/macos/dream-skin.css",
-            "CDA12A5E08815533919A6005A803C2269637CDCAAC4D121D170230163DC9CF09",
+            "AFF9433B526D7149DA99B7C07367B75BCA558F9D8114243331FB9099B54E2916",
+        ),
+        (
+            "assets/inject/upstream/dream-skin/macos/theme.json",
+            "FCCE3F314500BE1A58381FFE7F9A6B212912D54FF9A0E7D17B6664C1516F750E",
         ),
         (
             "assets/inject/upstream/cidala-tiger/windows/renderer-inject.js",
-            "CCA3A09B3E46AAF538CB121ABE7E6D43B6663F9BCEAD090767F55C2EE1D96C62",
+            "0BFB5F66A0323BF1392B42033E66904DE3EC4BFC8A5BA297F2BB92A4A6740A34",
         ),
         (
             "assets/inject/upstream/cidala-tiger/windows/dream-skin.css",
-            "0C371B7D794C4783648D1733661E8FA8674C872296CE5CF9898B28EB1765425C",
+            "482A60AF98DD6B460BF624C56918C5B57F9CCD5B55E52FA46D486F7D65259D9A",
         ),
         (
             "assets/inject/upstream/cidala-tiger/macos/renderer-inject.js",
-            "19202C8A37C7512E65F950A5516A314867FDF305B74B313F0ABCEA8CF7347F59",
+            "21FAF1DC0A3EBE78D8D972182CACE62BD93D5D0E5841725398A4A524EF2BC20B",
         ),
         (
             "assets/inject/upstream/cidala-tiger/macos/dream-skin.css",
-            "45506CA7C71D4E9867287AE2358C4380C0993F0D04039C29FEE6DBEE20495148",
+            "5E149E9A13985961C5F3125296178ACB2ABF0B528974F1E616AA625970430562",
         ),
         (
             "assets/inject/upstream/snow-skin/renderer-inject.js",
-            "9AE8123B51917975B5D4B91995173A6A4DD3C27C6BD5B465B5670C2C1330955A",
+            "0FCDFF4AECD03EAB2CA4EE923CCD20CB97EB5460F7C9F07351A2003FFA76E6FA",
         ),
         (
             "assets/inject/upstream/snow-skin/dream-skin.css",
-            "97807DE20E40680471D211466B657867CB46280F393EF9D7FBBA5CE829AE5599",
+            "0AF2D20FBE3E3DD13F0BE7F1E5A90366E1501084827B22C1D4815A421BFCE823",
         ),
         (
             "assets/inject/upstream/glass-vision/renderer-inject.js",

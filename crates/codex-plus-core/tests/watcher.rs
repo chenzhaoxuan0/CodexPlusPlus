@@ -121,10 +121,11 @@ fn launcher_process_filter_protects_current_process_ancestry() {
         (20, 10, "codex-plus-plus.exe"),
         (30, 20, "codex-plus-plus.exe"),
         (40, 10, "codex-plus-plus.exe"),
-        (50, 10, "codex-plus-plus-manager.exe"),
+        (50, 10, "codex-plus.exe"),
+        (60, 10, "codex-plus-plus-manager.exe"),
     ];
 
-    assert_eq!(filter_killable_launcher_processes(processes, 30), vec![40]);
+    assert_eq!(filter_killable_launcher_processes(processes, 30), vec![40, 50]);
 }
 
 #[test]
