@@ -116,32 +116,20 @@ describe("dream skin theme helpers", () => {
     assert.match(app, /Math\.max\(-160, Math\.min\(160, Number\(event\.currentTarget\.value\) \|\| 0\)\)/);
   });
 
-  it("keeps the Windows skin active when the sidebar is hidden", async () => {
+  it("keeps the modern Dream Skin runtime active when the sidebar is hidden", async () => {
     const renderer = await readFile(
       new URL("../../../assets/inject/upstream/dream-skin/windows/renderer-inject.js", import.meta.url),
       "utf8",
     );
-    const compatibility = await readFile(
-      new URL("../../../assets/inject/renderer-inject.js", import.meta.url),
-      "utf8",
-    );
-    const assets = await readFile(
-      new URL("../../../crates/codex-plus-core/src/assets.rs", import.meta.url),
-      "utf8",
-    );
 
-    assert.match(renderer, /const ensureShellMain = \(\) =>/);
-    assert.match(renderer, /main\[class\*="MainContentSurface"\]/);
-    assert.match(renderer, /data-codex-plus-dream-surface/);
+    assert.match(renderer, /main\.main-surface/);
+    assert.match(renderer, /data-dream-skin/);
+    assert.match(renderer, /data-dream-shell/);
+    assert.match(renderer, /ensure\(\{ root: true/);
     assert.doesNotMatch(renderer, /!shellMain\s*\|\|\s*!shellSidebar/);
-    assert.match(compatibility, /main\[class\*="_MainContentSurface_"\]/);
-    assert.match(compatibility, /shellMain\.classList\.add\("main-surface"\)/);
-    assert.match(compatibility, /data-codex-plus-dream-skin-main-surface/);
-    assert.match(compatibility, /clearDreamSkinMainSurfaceCompatibility\(\)/);
-    assert.match(assets, /DREAM_SKIN_RENDERER_REVISION: &str = "20-modern-main-surface"/);
   });
 
-  it("extends the Windows wallpaper treatment to right and bottom dock panels", async () => {
+  it("uses the stable selector contract for the full Codex shell", async () => {
     const renderer = await readFile(
       new URL("../../../assets/inject/upstream/dream-skin/windows/renderer-inject.js", import.meta.url),
       "utf8",
@@ -151,32 +139,14 @@ describe("dream skin theme helpers", () => {
       "utf8",
     );
 
-    assert.match(renderer, /\[data-app-shell-tabs="true"\]/);
-    assert.match(renderer, /dream-aux-panel-layer/);
-    assert.match(renderer, /dream-aux-panel-right/);
-    assert.match(renderer, /dream-aux-panel-bottom/);
-    assert.match(renderer, /clearAuxiliaryPanelClasses/);
-    assert.match(css, /\.dream-aux-panel-layer/);
-    assert.match(css, /\.dream-aux-panel-right/);
-    assert.match(css, /\.dream-aux-panel-bottom/);
-    assert.match(css, /\[data-codex-terminal="true"\]/);
-  });
-
-  it("keeps transient new-chat drafts on native geometry", async () => {
-    const renderer = await readFile(
-      new URL("../../../assets/inject/upstream/dream-skin/windows/renderer-inject.js", import.meta.url),
-      "utf8",
-    );
-    const css = await readFile(
-      new URL("../../../assets/inject/upstream/dream-skin/windows/dream-skin.css", import.meta.url),
-      "utf8",
-    );
-
-    assert.match(renderer, /homeHasClassicChrome/);
-    assert.match(renderer, /data-dream-home-layout/);
-    assert.match(renderer, /data-dream-home-layout.*soft/);
-    assert.match(css, /data-dream-home-layout.*structured/);
-    assert.match(css, /overflow-y: auto !important/);
+    assert.match(renderer, /codex-dream-skin-selectors\/1/);
+    assert.match(renderer, /app-shell-left-panel/);
+    assert.match(renderer, /home-route/);
+    assert.match(renderer, /adoptedStyleSheets/);
+    assert.match(renderer, /MutationObserver/);
+    assert.match(css, /html\[data-dream-skin="active"\]/);
+    assert.match(css, /main\.main-surface/);
+    assert.match(css, /aside\.app-shell-left-panel/);
     assert.match(css, /\.composer-surface-chrome/);
   });
 
@@ -289,7 +259,7 @@ describe("dream skin theme helpers", () => {
     const css = await readFile(new URL("./styles.css", import.meta.url), "utf8");
 
     assert.match(app, /dream-skin-theme-library/);
-    assert.match(app, /Windows 使用亮暗模式、图片取色和可选强调色/);
+    assert.match(app, /Windows 现在会读取主题中的完整 colors 色板/);
     assert.match(css, /\.dream-skin-market-grid\s*\{[^}]*grid-template-columns:\s*repeat\(3,/s);
     assert.match(css, /\.dream-skin-theme-list\s*\{[^}]*grid-template-columns:\s*repeat\(3,/s);
     assert.match(css, /@media \(max-width:\s*760px\)[\s\S]*\.dream-skin-theme-list\s*\{[^}]*grid-template-columns:\s*1fr/s);
@@ -319,7 +289,7 @@ describe("dream skin theme helpers", () => {
     assert.match(customizer, /t\("恢复 Codex 默认配色"\)/);
   });
 
-  it("exposes only effective Windows appearance and accent controls", async () => {
+  it("exposes Windows appearance and complete color controls", async () => {
     const app = await readFile(new URL("./App.tsx", import.meta.url), "utf8");
 
     assert.match(app, /dream-skin-windows-theme-controls/);
@@ -328,7 +298,7 @@ describe("dream skin theme helpers", () => {
     assert.match(app, /暗色/);
     assert.match(app, /跟随图片配色/);
     assert.match(app, /isWindowsPlatform \? \([\s\S]*dream-skin-windows-theme-controls[\s\S]*dream-skin-colors/);
-    assert.match(app, /if \(isWindowsPlatform\) \{[\s\S]*delete config\.colors;[\s\S]*delete config\.palette;/);
+    assert.doesNotMatch(app, /if \(isWindowsPlatform\) \{[\s\S]*delete config\.colors;/);
   });
 
   it("separates the remote marketplace from local theme editing", async () => {

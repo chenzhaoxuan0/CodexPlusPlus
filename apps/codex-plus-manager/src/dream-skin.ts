@@ -219,6 +219,7 @@ export function defaultDreamSkinTheme(): DreamSkinThemeConfig {
       projectLabel: "◉  选择项目",
       statusText: "DREAM SKIN ONLINE",
       quote: "MAKE SOMETHING WONDERFUL",
+      colors: defaultDreamSkinColors(),
       image: "dream-reference.jpg",
       appearance: "auto",
       art: {

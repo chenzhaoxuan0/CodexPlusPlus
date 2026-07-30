@@ -363,11 +363,7 @@ impl Default for DreamSkinThemeConfig {
             project_label: default_dream_skin_project_label(),
             status_text: default_dream_skin_status_text(),
             quote: default_dream_skin_quote(),
-            colors: if cfg!(windows) {
-                None
-            } else {
-                Some(DreamSkinColors::default())
-            },
+            colors: Some(DreamSkinColors::default()),
             extra_fields,
         }
     }

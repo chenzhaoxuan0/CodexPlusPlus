@@ -3085,8 +3085,8 @@ export function App() {
           if (!current) return current;
           if (isWindowsPlatform) {
             const config = { ...current.config };
-            delete config.colors;
             delete config.palette;
+            config.colors = defaultDreamSkinColors();
             return { ...current, config };
           }
           const defaults = defaultDreamSkinTheme();
@@ -5044,15 +5044,6 @@ function DreamSkinScreen({
   const themeAppearance = theme.appearance === "light" || theme.appearance === "dark"
     ? theme.appearance
     : "auto";
-  const windowsAccent = typeof theme.palette?.accent === "string" ? theme.palette.accent : "";
-  const updateWindowsAccent = (value: string) => {
-    const palette = { ...(theme.palette ?? {}) };
-    if (value.trim()) palette.accent = value;
-    else delete palette.accent;
-    const next: DreamSkinThemeConfig = { ...theme, palette };
-    if (!Object.keys(palette).length) delete next.palette;
-    updateTheme(next);
-  };
   const companion = theme.companion;
   const companionDataUrl = typeof companion?.dataUrl === "string" ? companion.dataUrl : "";
   const companionEnabled = Boolean(companionDataUrl) && companion?.enabled !== false;
@@ -5381,7 +5372,7 @@ function DreamSkinScreen({
                 <Info className="h-4 w-4" />
                 <span>
                   {isWindowsPlatform
-                    ? t("Windows 使用亮暗模式、图片取色和可选强调色；完整色板仅在 macOS 生效。")
+                    ? t("Windows 现在会读取主题中的完整 colors 色板；清除色板后将恢复从图片自适应配色。")
                     : t("macOS 会应用主题中的图片、文字和颜色配置。")}
                 </span>
               </div>
@@ -5543,24 +5534,34 @@ function DreamSkinScreen({
                           ))}
                         </div>
                       </Field>
-                      <div className="dream-skin-windows-accent">
-                        <DreamSkinColorField
-                          label={t("强调色")}
-                          value={windowsAccent}
-                          onChange={updateWindowsAccent}
-                        />
+                      <div className="dream-skin-colors">
+                        {dreamSkinColorFields().map(([key, label]) => (
+                          <DreamSkinColorField
+                            key={key}
+                            label={label}
+                            value={String(themeColors[key])}
+                            onChange={(value) => updateThemeColor(key, value)}
+                          />
+                        ))}
+                      </div>
+                      <Toolbar>
                         <Button
-                          disabled={!windowsAccent.trim()}
-                          onClick={() => updateWindowsAccent("")}
+                          disabled={!theme.colors}
+                          onClick={() => {
+                            const next = { ...theme };
+                            delete next.colors;
+                            delete next.palette;
+                            updateTheme(next);
+                          }}
                           size="sm"
                           variant="outline"
                         >
                           <RotateCcw className="h-4 w-4" />
                           {t("跟随图片配色")}
                         </Button>
-                      </div>
+                      </Toolbar>
                       <small className="dream-skin-windows-theme-note">
-                        {t("亮暗模式直接控制 Codex 外观；强调色留空时自动从主题图片提取。")}
+                        {t("Windows 现在会读取主题中的完整 colors 色板；清除色板后将恢复从图片自适应配色。")}
                       </small>
                     </div>
                   ) : (

@@ -123,8 +123,6 @@ export const EN_PLAIN: Record<string, string> = {
   "亮色": "Light",
   "暗色": "Dark",
   "跟随图片配色": "Use image colors",
-  "亮暗模式直接控制 Codex 外观；强调色留空时自动从主题图片提取。":
-    "The appearance mode directly controls Codex. Leave the accent empty to derive it from the theme image.",
   "主题市场": "Theme marketplace",
   "主题视图": "Theme view",
   "社区主题": "Community themes",
@@ -181,8 +179,8 @@ export const EN_PLAIN: Record<string, string> = {
   "主题操作": "Theme actions",
   "重命名": "Rename",
   "正在加载主题库…": "Loading theme library...",
-  "Windows 使用亮暗模式、图片取色和可选强调色；完整色板仅在 macOS 生效。":
-    "Windows uses appearance mode, image-derived colors, and an optional accent; the full palette applies only on macOS.",
+  "Windows 现在会读取主题中的完整 colors 色板；清除色板后将恢复从图片自适应配色。":
+    "Windows uses the theme image, appearance mode, and complete colors palette.",
   "macOS 会应用主题中的图片、文字和颜色配置。":
     "macOS applies the image, text, and color settings from the theme.",
   "Dream Skin 图片预览": "Dream Skin image preview",
