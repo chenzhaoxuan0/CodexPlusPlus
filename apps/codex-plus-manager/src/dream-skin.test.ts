@@ -51,6 +51,8 @@ describe("dream skin theme helpers", () => {
     assert.match(assets, /__GLASS_VISION_CSS_JSON__/);
     assert.match(renderer, /__CODEX_PLUS_EXTERNAL_DREAM_SKIN_RUNTIME__/);
     assert.match(renderer, /__CODEX_PLUS_CLEAR_DREAM_SKIN__/);
+    assert.match(renderer, /data-codex-plus-dream-skin-main-compat/);
+    assert.match(renderer, /classList\.add\("main-surface"\)/);
   });
 
   it("preserves target-only theme fields without rewriting them", () => {
@@ -144,6 +146,8 @@ describe("dream skin theme helpers", () => {
     assert.match(renderer, /home-route/);
     assert.match(renderer, /adoptedStyleSheets/);
     assert.match(renderer, /MutationObserver/);
+    assert.match(renderer, /data-codex-plus-dream-skin-main-compat/);
+    assert.match(renderer, /ensureShellMainCompatibility/);
     assert.match(css, /html\[data-dream-skin="active"\]/);
     assert.match(css, /main\.main-surface/);
     assert.match(css, /aside\.app-shell-left-panel/);

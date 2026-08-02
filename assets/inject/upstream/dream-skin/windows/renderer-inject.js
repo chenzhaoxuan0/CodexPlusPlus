@@ -5,6 +5,7 @@
   const DISABLED_KEY = "__CODEX_DREAM_SKIN_DISABLED__";
   const STYLE_REGISTRY_KEY = "__CODEX_DREAM_SKIN_STYLE_SHEETS__";
   const STYLE_ID = "codex-dream-skin-style";
+  const MAIN_COMPAT_ATTR = "data-codex-plus-dream-skin-main-compat";
   const SHELL_ATTR = "data-dream-shell";
   const PART_ATTR = "data-ds-part";
   const ROOT_ATTRS = [
@@ -562,6 +563,18 @@
     try { return Boolean(document.querySelector(selector)); } catch { return false; }
   };
 
+  const ensureShellMainCompatibility = () => {
+    const shellMain = document.querySelector("main.main-surface") || document.querySelector("main");
+    if (!shellMain) return null;
+    // Codex 26.727 moved this stable class behind CSS Modules. Preserve the
+    // DreamSkin selector contract while leaving Codex's own class untouched.
+    if (!shellMain.classList.contains("main-surface")) {
+      shellMain.classList.add("main-surface");
+      shellMain.setAttribute(MAIN_COMPAT_ATTR, "true");
+    }
+    return shellMain;
+  };
+
   const stableTestidHit = (testid) => {
     const selector = stableTestidSelector(testid);
     if (!selector) return false;
@@ -664,6 +677,7 @@
     const root = document.documentElement;
     if (!root) return;
     metrics.ensureCalls += 1;
+    ensureShellMainCompatibility();
     if (rootPass) applyRootState(root);
     if (partPass) refreshParts();
     if (scopePass) refreshScope();
@@ -685,6 +699,10 @@
       }
     }
     removeParts();
+    for (const node of document.querySelectorAll(`main[${MAIN_COMPAT_ATTR}="true"]`)) {
+      node.classList.remove("main-surface");
+      node.removeAttribute(MAIN_COMPAT_ATTR);
+    }
     state?.rootObserver?.disconnect();
     state?.partObserver?.disconnect();
     if (bodyReadyHandler && typeof document.removeEventListener === "function") {
