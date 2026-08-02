@@ -150,6 +150,7 @@ describe("dream skin theme helpers", () => {
     assert.match(renderer, /ensureShellMainCompatibility/);
     assert.match(css, /html\[data-dream-skin="active"\]/);
     assert.match(css, /main\.main-surface/);
+    assert.match(css, /_MainContentTopFade_/);
     assert.match(css, /aside\.app-shell-left-panel/);
     assert.match(css, /\.composer-surface-chrome/);
   });

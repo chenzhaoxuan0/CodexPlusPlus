@@ -1121,7 +1121,9 @@ html[data-dream-skin="active"][data-dream-art-wide="true"] main.main-surface
 }
 
 html[data-dream-skin="active"][data-dream-art-wide="true"] main.main-surface
-  .app-shell-main-content-top-fade {
+  .app-shell-main-content-top-fade,
+html[data-dream-skin="active"][data-dream-art-wide="true"] main.main-surface
+  [class*="_MainContentTopFade_"] {
   display: none !important;
   background: transparent !important;
 }
