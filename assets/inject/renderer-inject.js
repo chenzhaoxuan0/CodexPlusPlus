@@ -1886,6 +1886,10 @@
     document.querySelectorAll(".dream-home-shell").forEach((node) => node.classList.remove("dream-home-shell"));
     document.querySelectorAll(".dream-skin-home").forEach((node) => node.classList.remove("dream-skin-home"));
     document.querySelectorAll(".dream-skin-home-shell").forEach((node) => node.classList.remove("dream-skin-home-shell"));
+    document.querySelectorAll('main[data-codex-plus-dream-skin-main-compat="true"]').forEach((node) => {
+      node.classList.remove("main-surface");
+      node.removeAttribute("data-codex-plus-dream-skin-main-compat");
+    });
     document.querySelectorAll("[class]").forEach((node) => {
       for (const className of [...node.classList]) {
         if (
@@ -2049,6 +2053,12 @@
       if (!shellMain) {
         clearDreamSkinPresentation();
         return;
+      }
+      // Codex 26.727 moved the shell's stable class behind CSS Modules. Keep
+      // the DreamSkin selector contract working without changing Codex's DOM.
+      if (!shellMain.classList.contains("main-surface")) {
+        shellMain.classList.add("main-surface");
+        shellMain.setAttribute("data-codex-plus-dream-skin-main-compat", "true");
       }
 
       root.classList.add(descriptor.rootClass);
