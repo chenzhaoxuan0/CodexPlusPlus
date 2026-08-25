@@ -19,11 +19,11 @@ fn bundled_target_renderers_and_styles_remain_byte_exact() {
     for (path, hash) in [
         (
             "assets/inject/upstream/dream-skin/windows/renderer-inject.js",
-            "EBB8EAB63ABF129980AD91B2103177A8E0DBA92576E96AE139E5AD8EC542ED6C",
+            "58C5486BAC6DAB71EEA5B16B644F57A5F640D13367BCE2D28DE0BEDB08343F2D",
         ),
         (
             "assets/inject/upstream/dream-skin/windows/dream-skin.css",
-            "AF3BD8820FF21AA8E1246375150AAEB67EA8161B99067C1787D2C7C9D8324C35",
+            "2198883E2B042417D6B6E009BD60821D69FAD89A24054B5BE941E0FD237E8B63",
         ),
         (
             "assets/inject/upstream/dream-skin/windows/theme.json",
@@ -31,11 +31,11 @@ fn bundled_target_renderers_and_styles_remain_byte_exact() {
         ),
         (
             "assets/inject/upstream/dream-skin/macos/renderer-inject.js",
-            "EBB8EAB63ABF129980AD91B2103177A8E0DBA92576E96AE139E5AD8EC542ED6C",
+            "58C5486BAC6DAB71EEA5B16B644F57A5F640D13367BCE2D28DE0BEDB08343F2D",
         ),
         (
             "assets/inject/upstream/dream-skin/macos/dream-skin.css",
-            "AF3BD8820FF21AA8E1246375150AAEB67EA8161B99067C1787D2C7C9D8324C35",
+            "2198883E2B042417D6B6E009BD60821D69FAD89A24054B5BE941E0FD237E8B63",
         ),
         (
             "assets/inject/upstream/dream-skin/macos/theme.json",

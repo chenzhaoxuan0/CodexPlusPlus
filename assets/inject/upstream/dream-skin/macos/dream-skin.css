@@ -562,20 +562,8 @@ html[data-dream-skin="active"]
 
 html[data-dream-skin="active"]
   main:is(.main-surface, [data-app-shell-main-surface], [class*="_MainContentSurface_"]):not(:has([role="main"])) > header:is(.app-header-tint, [data-app-shell-header-edge-scroll], [class*="_Header_"])::after {
-  content: var(--dream-skin-status, "DREAM SKIN ONLINE");
-  position: absolute;
-  right: 84px;
-  top: 13px;
-  z-index: 2;
-  max-width: 28%;
-  overflow: hidden;
-  color: var(--ds-muted);
-  font: 700 9px/1.2 -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
-  letter-spacing: .08em;
-  text-overflow: ellipsis;
-  text-shadow: 0 1px 10px rgb(var(--ds-bg-rgb) / .32);
-  white-space: nowrap;
-  pointer-events: none;
+  content: none !important;
+  display: none !important;
 }
 
 html[data-dream-skin="active"]
@@ -1232,9 +1220,10 @@ html[data-dream-skin="active"][data-dream-art-wide="true"] main:is(.main-surface
 /* Codex paints a second opaque fade behind the sticky composer. The composer
    already owns its readable surface, so retaining this layer creates a false
    bottom panel and makes the control look duplicated. */
-html[data-dream-skin="active"][data-dream-art-wide="true"] main:is(.main-surface, [data-app-shell-main-surface], [class*="_MainContentSurface_"])
-  .thread-scroll-container .bg-gradient-to-t.from-token-main-surface-primary {
+html[data-dream-skin="active"] main:is(.main-surface, [data-app-shell-main-surface], [class*="_MainContentSurface_"])
+  .thread-scroll-container :is(.bg-gradient-to-t, [class*="bg-gradient-to-t"]) {
   background: transparent !important;
+  background-image: none !important;
 }
 
 html[data-dream-skin="active"] [role="main"]:has([data-testid="home-icon"]) div:has(> .horizontal-scroll-fade-mask .group\/project-selector) {

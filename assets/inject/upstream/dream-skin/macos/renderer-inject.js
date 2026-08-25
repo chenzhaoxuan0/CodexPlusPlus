@@ -30,7 +30,7 @@
     "--dream-art-focus-x", "--dream-art-focus-y", "--dream-art-position",
     "--dream-skin-focus-x", "--dream-skin-focus-y", "--dream-skin-art-position",
     "--dream-skin-name", "--dream-skin-tagline", "--dream-skin-project-prefix",
-    "--dream-skin-project-label", "--dream-skin-brand-subtitle", "--dream-skin-status",
+    "--dream-skin-project-label", "--dream-skin-brand-subtitle",
     "--dream-skin-quote", "--dream-skin-art",
     "--ds-theme-color-background", "--ds-theme-color-panel",
     "--ds-theme-color-panel-alt", "--ds-theme-color-accent",
@@ -376,7 +376,6 @@
     setStyleProperty(root, "--dream-skin-brand-subtitle", cssString(
       THEME.brandSubtitle || "CODEX DREAM SKIN",
     ));
-    setStyleProperty(root, "--dream-skin-status", cssString(THEME.statusText || "DREAM SKIN ONLINE"));
     setStyleProperty(root, "--dream-skin-project-prefix", cssString(THEME.projectPrefix || "选择项目 · "));
     setStyleProperty(root, "--dream-skin-project-label", cssString(THEME.projectLabel || "◉  选择项目"));
   };

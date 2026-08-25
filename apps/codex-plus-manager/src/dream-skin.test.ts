@@ -147,9 +147,12 @@ describe("dream skin theme helpers", () => {
     assert.match(renderer, /MutationObserver/);
     assert.match(renderer, /data-app-shell-main-surface/);
     assert.match(renderer, /main-content-top-fade/);
+    assert.doesNotMatch(renderer, /--dream-skin-status/);
     assert.match(css, /html\[data-dream-skin="active"\]/);
     assert.match(css, /data-app-shell-main-surface/);
     assert.match(css, /_MainContentTopFade_/);
+    assert.match(css, /content: none !important/);
+    assert.match(css, /thread-scroll-container :is\(\.bg-gradient-to-t/);
     assert.match(css, /aside\.app-shell-left-panel/);
     assert.match(css, /\.composer-surface-chrome/);
   });
@@ -191,7 +194,7 @@ describe("dream skin theme helpers", () => {
     assert.equal(isDreamSkinDraftDirty(draft, { ...draft, imagePath: "other.png" }), true);
   });
 
-  it("visibly credits the source project and exposes complete controls", async () => {
+  it("visibly credits the source project and omits the retired status control", async () => {
     const source = await readFile(new URL("./App.tsx", import.meta.url), "utf8");
 
     for (const text of [
@@ -203,7 +206,6 @@ describe("dream skin theme helpers", () => {
       "主题标语",
       "项目前缀",
       "项目按钮文字",
-      "状态文字",
       "引用文字",
       "应用皮肤",
       "恢复 Codex 外观",
@@ -212,6 +214,7 @@ describe("dream skin theme helpers", () => {
     ]) {
       assert.match(source, new RegExp(text));
     }
+    assert.doesNotMatch(source, /状态文字/);
     assert.doesNotMatch(source, /暂停皮肤|继续皮肤|pauseDreamSkin/);
   });
 
