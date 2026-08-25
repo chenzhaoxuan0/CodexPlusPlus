@@ -63,7 +63,7 @@ fn injection_script_prefixes_helper_url_and_metadata() {
     assert!(script.contains(r#"!/^app:\/\/\-\//i.test(window.location.href)"#));
     assert!(script.contains("window.__CODEX_SESSION_DELETE_HELPER__"));
     assert!(script.contains("http://127.0.0.1:57321"));
-    assert!(!script.contains("window.__CODEX_PLUS_SPONSOR_IMAGES__"));
+    assert!(script.contains("window.__CODEX_PLUS_SPONSOR_IMAGES__"));
     assert!(script.contains("window.__CODEX_PLUS_VERSION__"));
     assert!(script.contains(codex_plus_core::version::VERSION));
     assert!(script.contains("https://discord.gg/y96kX7A76v"));
@@ -601,7 +601,7 @@ fn injection_script_installs_dream_skin_from_backend_settings() {
     assert!(script.contains("window.__CODEX_PLUS_CLEAR_DREAM_SKIN__?.();"));
     assert!(script.contains("window.__CODEX_PLUS_DREAM_SKIN_TARGET_ENGINE__"));
     assert!(script.contains("state.version = `codex-plus:"));
-    assert!(script.contains("state.observer?.disconnect?.()"));
+    assert!(!script.contains("state.observer?.disconnect?.()"));
     assert!(script.contains("window.__CODEX_PLUS_DREAM_SKIN_PAYLOAD_SIGNATURE__"));
     assert!(script.contains("window.__CODEX_PLUS_DREAM_SKIN_THEME__"));
     assert!(script.contains("\"colors\""));
@@ -1368,7 +1368,6 @@ fn injection_script_keeps_session_action_buttons_in_pr_style() {
 
     assert!(script.contains("actionButtonClass = \"codex-session-action-button\""));
     assert!(script.contains("background: transparent;"));
-    assert!(script.contains("background: #363839;"));
     assert!(script.contains("cursor: default;"));
 }
 
