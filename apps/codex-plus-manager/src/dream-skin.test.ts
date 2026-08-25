@@ -51,8 +51,6 @@ describe("dream skin theme helpers", () => {
     assert.match(assets, /__GLASS_VISION_CSS_JSON__/);
     assert.match(renderer, /__CODEX_PLUS_EXTERNAL_DREAM_SKIN_RUNTIME__/);
     assert.match(renderer, /__CODEX_PLUS_CLEAR_DREAM_SKIN__/);
-    assert.match(renderer, /data-codex-plus-dream-skin-main-compat/);
-    assert.match(renderer, /classList\.add\("main-surface"\)/);
   });
 
   it("preserves target-only theme fields without rewriting them", () => {
@@ -124,7 +122,8 @@ describe("dream skin theme helpers", () => {
       "utf8",
     );
 
-    assert.match(renderer, /main\.main-surface/);
+    assert.match(renderer, /data-app-shell-main-surface/);
+    assert.match(renderer, /_MainContentSurface_/);
     assert.match(renderer, /data-dream-skin/);
     assert.match(renderer, /data-dream-shell/);
     assert.match(renderer, /ensure\(\{ root: true/);
@@ -146,10 +145,10 @@ describe("dream skin theme helpers", () => {
     assert.match(renderer, /home-route/);
     assert.match(renderer, /adoptedStyleSheets/);
     assert.match(renderer, /MutationObserver/);
-    assert.match(renderer, /data-codex-plus-dream-skin-main-compat/);
-    assert.match(renderer, /ensureShellMainCompatibility/);
+    assert.match(renderer, /data-app-shell-main-surface/);
+    assert.match(renderer, /main-content-top-fade/);
     assert.match(css, /html\[data-dream-skin="active"\]/);
-    assert.match(css, /main\.main-surface/);
+    assert.match(css, /data-app-shell-main-surface/);
     assert.match(css, /_MainContentTopFade_/);
     assert.match(css, /aside\.app-shell-left-panel/);
     assert.match(css, /\.composer-surface-chrome/);
