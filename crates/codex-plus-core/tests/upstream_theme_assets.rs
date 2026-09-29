@@ -31,19 +31,19 @@ fn bundled_target_renderers_and_styles_remain_byte_exact() {
     for (path, hash) in [
         (
             "assets/inject/upstream/dream-skin/windows/renderer-inject.js",
-            "1F1E408F8B89BEF6B83DE0A5EE047BFB1F8DFD0165628398D520B8897083FFD7",
+            "4904DDD8116F767285FFB4B18A148759DC560A3620B734E1EBE60EEC59F31466",
         ),
         (
             "assets/inject/upstream/dream-skin/windows/dream-skin.css",
-            "EF6A690AFFF79493EA2414C1DFD7837A2527AC3D2387BE24A0960657F55B182C",
+            "A6C0605302C491FF2E918B7773CA870BF4EDA9A231E823C10E30E5BDDB31F074",
         ),
         (
             "assets/inject/upstream/dream-skin/macos/renderer-inject.js",
-            "1F1E408F8B89BEF6B83DE0A5EE047BFB1F8DFD0165628398D520B8897083FFD7",
+            "4904DDD8116F767285FFB4B18A148759DC560A3620B734E1EBE60EEC59F31466",
         ),
         (
             "assets/inject/upstream/dream-skin/macos/dream-skin.css",
-            "EF6A690AFFF79493EA2414C1DFD7837A2527AC3D2387BE24A0960657F55B182C",
+            "A6C0605302C491FF2E918B7773CA870BF4EDA9A231E823C10E30E5BDDB31F074",
         ),
         (
             "assets/inject/upstream/cidala-tiger/windows/renderer-inject.js",

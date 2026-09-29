@@ -156,6 +156,16 @@ describe("dream skin theme helpers", () => {
     assert.match(renderer, /data-local-conversation-final-assistant/);
     assert.match(renderer, /data-local-conversation-user-anchor/);
     assert.match(css, /_MainContentTopFade_/);
+    // Codex 26.924 moved data-app-shell-main-content-top-fade from the fade overlay
+    // onto the container that wraps the whole route, so a bare attribute selector
+    // plus `display: none` hides the thread scroll container and the composer with
+    // it (#415 / #414 upstream, #2332 here). The attribute form must stay limited
+    // to the childless native overlay.
+    assert.doesNotMatch(
+      css,
+      /\[data-app-shell-main-content-top-fade\](?!:not\(:has\(\*\)\))/,
+      "A bare main-content-top-fade attribute selector would hide the 26.924 route container.",
+    );
     assert.match(css, /_ComposerLayoutBody_/);
     assert.match(css, /data-markdown-table="true"/);
     assert.match(css, /_Toolbar_.*> \*/s);

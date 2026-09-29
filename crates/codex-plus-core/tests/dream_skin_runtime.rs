@@ -199,6 +199,24 @@ fn bundled_skin_runtimes_cover_the_current_selector_contract() {
             source.contains("_MainContentTopFade_"),
             "missing modular top fade in {relative_path}"
         );
+        // Codex 26.924 moved data-app-shell-main-content-top-fade onto the route
+        // container, so the bare attribute form plus `display: none` hides the
+        // thread and composer (#2332). Guard the narrowing so a re-sync from an
+        // older Dream Skin cannot silently reintroduce the empty-page bug.
+        let bare_top_fade = "[data-app-shell-main-content-top-fade]";
+        let narrowed_top_fade = "[data-app-shell-main-content-top-fade]:not(:has(*))";
+        for (index, _) in source.match_indices(bare_top_fade) {
+            let rest = &source[index + bare_top_fade.len()..];
+            assert!(
+                rest.starts_with(":not(:has(*))"),
+                "bare main-content-top-fade attribute selector would hide the 26.924 \
+                 route container in {relative_path}"
+            );
+        }
+        assert!(
+            source.contains(narrowed_top_fade),
+            "missing the narrowed main-content-top-fade overlay selector in {relative_path}"
+        );
         assert!(
             source.contains("_ComposerLayoutBody_"),
             "missing modern composer body in {relative_path}"

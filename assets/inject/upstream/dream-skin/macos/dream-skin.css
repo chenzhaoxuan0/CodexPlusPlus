@@ -612,12 +612,65 @@ html[data-dream-skin="active"][data-dream-shell="light"]
 html[data-dream-skin="active"][data-dream-shell="dark"]
   :is([class~="group/application-menu-top-bar"], [class*="_ApplicationMenuTopBar_"]) {
   color: var(--ds-text) !important;
-  background: rgb(var(--ds-panel-rgb) / .38) !important;
-  border-bottom: 1px solid var(--ds-line) !important;
-  box-shadow:
-    0 1px 14px rgb(var(--ds-bg-rgb) / .28),
-    inset 0 1px rgb(var(--ds-text-rgb) / .12) !important;
-  backdrop-filter: blur(24px) saturate(130%) brightness(108%) !important;
+  background: rgb(var(--ds-bg-rgb) / .72) !important;
+  border-bottom: 0 !important;
+  box-shadow: none !important;
+  backdrop-filter: blur(14px) saturate(105%) !important;
+}
+
+html[data-dream-skin="active"][data-dream-shell="dark"]
+  :is([class~="group/application-menu-top-bar"], [class*="_ApplicationMenuTopBar_"]) :is(button, svg) {
+  color: var(--ds-text) !important;
+  text-shadow: 0 1px 2px rgb(var(--ds-bg-rgb) / .55) !important;
+}
+
+/* Codex 26.924: the native PageSurface keeps a top gutter plus 4px on the
+   right and bottom, and paints its own radius and drop shadow. That is what
+   draws the bright seam under the top bar and the frame around every route.
+   Flatten the gutters on the app-shell frame instead of per route, so Chat,
+   Scheduled, Library, Images, Personalization and Settings all join the bar —
+   a route-scoped patch only ever fixed the chat page (#371).
+
+   The reporter guide scoped this to
+   html[data-codex-os="win32"][data-codex-window-chrome="application-menu"],
+   but the bundled renderer never sets those two attributes and they appear
+   nowhere in the contract, so gating on them would ship a silently dead rule.
+   The structural anchors below only exist on the Windows application-menu
+   shell, the same way the bar rule above relies on "macOS simply has no
+   match". */
+html[data-dream-skin="active"] [data-app-shell-frame][data-app-shell-page-surface] {
+  padding-inline-end: 0 !important;
+  padding-block-end: 0 !important;
+}
+
+html[data-dream-skin="active"]
+  :is([class~="group/application-menu-top-bar"], [class*="_ApplicationMenuTopBar_"]) {
+  height: 44px !important;
+  min-height: 44px !important;
+  flex: 0 0 44px !important;
+}
+
+html[data-dream-skin="active"] [data-app-shell-frame][data-app-shell-page-surface]
+  :is(aside.app-shell-left-panel, main[data-app-shell-main-surface]) {
+  margin-top: 0 !important;
+}
+
+html[data-dream-skin="active"] [data-app-shell-frame][data-app-shell-page-surface]
+  [class*="_PageSurface_"][aria-hidden="true"] {
+  inset-block-start: 0 !important;
+  border-radius: 0 !important;
+  box-shadow: none !important;
+}
+
+/* Settings wraps its content in one extra opaque Electron surface, so the
+   wallpaper never reaches the right pane. Scoped by the panel slug attribute
+   rather than the class pair alone: a global .bg-surface reset would also drop
+   the background from dialogs, menus and form cards. */
+html[data-dream-skin="active"]:has([data-settings-panel-slug])
+  main:is(.main-surface, [data-app-shell-main-surface], [class*="_MainContentSurface_"])
+  [class~="electron:bg-surface"][class~="windows:rounded-tl-lg"] {
+  background: transparent !important;
+  border-radius: 0 !important;
 }
 
 html[data-dream-skin="active"][data-dream-shell="dark"]
@@ -862,7 +915,7 @@ html[data-dream-skin="active"] [role="main"]:has([data-testid="home-icon"]) .gro
     border-color .18s cubic-bezier(.22, 1, .36, 1) !important;
 }
 
-html[data-dream-skin="active"] [role="main"]:has([data-testid="home-icon"]) .group\/home-suggestions button [class~="text-token-text-primary"] {
+html[data-dream-skin="active"] [role="main"]:has([data-testid="home-icon"]) .group\/home-suggestions button :is([class~="text-token-text-primary"], [class~="text-default"]) {
   color: var(--ds-text) !important;
 }
 
@@ -905,7 +958,10 @@ html[data-dream-skin="active"] :is(.composer-surface-chrome, [class*="_ComposerL
   border: 1px solid rgb(var(--ds-muted-rgb) / .18) !important;
   border-radius: 22px !important;
   background: rgb(var(--ds-panel-rgb) / .94) !important;
-  box-shadow: 0 10px 28px rgb(var(--ds-bg-rgb) / .24) !important;
+  /* 26.924: the composer's own drop shadow stacks with the native fade layers
+     into a large dark halo that grows with the control's height. The panel
+     paint and the 1px border already separate it from the thread. */
+  box-shadow: none !important;
   backdrop-filter: blur(16px) saturate(108%) !important;
 }
 
@@ -1270,6 +1326,19 @@ html[data-dream-skin="active"] main:is(.main-surface, [data-app-shell-main-surfa
   background-image: none !important;
 }
 
+/* Codex 26.924 adds a third fade inside the thread scroll container itself.
+   The two signatures above cover the older full-height bar and the 28px
+   under-composer bar; this one carries from-surface/via-surface and sits
+   inside the thread, so it kept painting a dark band across the bottom of
+   every conversation. data-ds-part is written by the bundled renderer, so the
+   anchor cannot go stale the way a hashed class would. */
+html[data-dream-skin="active"] main:is(.main-surface, [data-app-shell-main-surface], [class*="_MainContentSurface_"]):not(:has([role="main"]))
+  [data-ds-part="thread"]
+  [aria-hidden="true"][class~="pointer-events-none"][class~="bg-gradient-to-t"][class~="from-surface"][class~="via-surface"] {
+  background: transparent !important;
+  background-image: none !important;
+}
+
 /* Native wide blocks escape the prose column with negative inline margins.
    Keep tables inside the themed message and delegate width overflow to the
    existing horizontal scroller. */
@@ -1378,13 +1447,46 @@ html[data-dream-skin="active"]:is([data-dream-task-mode="ambient"], [data-dream-
   background: transparent !important;
 }
 
+/* Codex 26.924 utility routes: Projects, Pull Requests and Customize each keep
+   their own full-window opaque surface, so the wallpaper stops at the route
+   edge. These are separate from the chat/home fix above and were never adapted
+   for this shell. Every anchor below was counted over the live 26.924 renderer:
+   the focus-area direct child is 1 on Projects and 0 on Home, and the pane frame
+   and sticky shell only exist on their own routes. Keep them that way — a bare
+   `.bg-surface` reset would also strip dialogs, menus and form cards. */
+html[data-dream-skin="active"] [data-app-shell-focus-area] > .bg-surface {
+  background: transparent !important;
+}
+
+/* Pull Requests stacks its detail pane: pane frame, then section, then the
+   detail container. Clearing only the frame leaves two nested opaque layers. */
+html[data-dream-skin="active"] [data-app-shell-pane-frame],
+html[data-dream-skin="active"] [data-app-shell-pane-frame] .bg-surface {
+  background: transparent !important;
+}
+
+/* Customize pins its page header with a sticky shell whose ::before paints an
+   opaque backdrop. Clear the paint but keep the blur, so the header still
+   separates from list content once it scrolls underneath. The composer is also
+   sticky, so exclude anything that owns one. */
+html[data-dream-skin="active"] [data-app-shell-focus-area] [data-sticky]:not(:has([data-codex-composer-root]))::before {
+  background: transparent !important;
+  backdrop-filter: blur(16px) saturate(108%) !important;
+}
+
 html[data-dream-skin="active"][data-dream-art-wide="true"] main:is(.main-surface, [data-app-shell-main-surface], [class*="_MainContentSurface_"])
   .app-shell-main-content-frame {
   border-top: 0 !important;
 }
 
+/* Codex 26.924 moved data-app-shell-main-content-top-fade from the fade
+   overlay onto the container that wraps the whole route. Matching the bare
+   attribute therefore hid the thread scroll container and the composer along
+   with it, so every conversation rendered as an empty pane (#415, #414). The
+   attribute form is limited to the childless native overlay; the class forms
+   keep covering builds that still tag the overlay itself. */
 html[data-dream-skin="active"][data-dream-art-wide="true"] main:is(.main-surface, [data-app-shell-main-surface], [class*="_MainContentSurface_"])
-  :is(.app-shell-main-content-top-fade, [data-app-shell-main-content-top-fade], [class*="_MainContentTopFade_"]) {
+  :is(.app-shell-main-content-top-fade, [data-app-shell-main-content-top-fade]:not(:has(*)), [class*="_MainContentTopFade_"]) {
   display: none !important;
   background: transparent !important;
 }
@@ -1427,7 +1529,10 @@ html[data-dream-skin="active"] [role="main"]:has([data-testid="home-icon"]) .gro
 
 html[data-dream-skin="active"] .ProseMirror {
   color: var(--ds-text) !important;
-  caret-color: var(--ds-accent) !important;
+  /* 26.924: the accent tone can land too close to the composer's own tint on a
+     dark wallpaper, leaving the caret effectively invisible. The caret belongs
+     to the text it edits, so it follows the text colour. */
+  caret-color: var(--ds-text) !important;
 }
 
 html[data-dream-skin="active"] button[class~="bg-token-foreground"] {
